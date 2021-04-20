@@ -6,13 +6,17 @@ import (
 )
 
 type Type interface {
-	UnderlyingType() tftypes.Type
-	ToTerraformValue() (interface{}, error)
-	FromTerraformValue(tftypes.Value) error
+	TerraformType() tftypes.Type
 	Validate(tftypes.Value) diags.Diagnostics
 	Description(format TextFormat) string
+	ValueFromTerraform(tftypes.Value) (Value, error)
 }
 
 type PlanModifyingType interface {
 	ModifyPlan(state, planned tftypes.Value) (tftypes.Value, error)
+}
+
+type Value interface {
+	ToTerraformValue() (interface{}, error)
+	Equal(Value) bool
 }
